@@ -1,11 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="h-full w-full" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.9"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/disable-element.js"></script>
 </head>
-<body>
-    <h1> hello page </h1>
+<body class="h-full w-full">
+
+    <main class="w-full h-full flex items-center justify-center gap-4">
+        <section>
+            <ul class="menu menu-md bg-base-200 w-56 rounded-box" id="film-list">
+                {{ range .Films }}
+                    {{ block "film-list-element" . }}
+                        <li> {{ .Title }} - {{ .Director }} </li>
+                    {{ end }}
+                {{ end }}
+            </ul>
+        </section>
+
+
+        <section>
+            <form class="flex flex-col gap-2" hx-post="/add-film/"  hx-ext="disable-element" hx-disable-element="#to-disable" hx-target="#film-list" hx-swap="beforeend" hx-indicator="#loading">
+                <label>
+                    Title
+                    <input name="title" class="input input-bordered w-full max-w-xs" />
+                </label>
+                <label>
+                    Director
+                    <input name="director" class="input input-bordered w-full max-w-xs" />
+                </label>
+
+                <button id="to-disable" type="submit" class="btn">
+                    <style>
+                        
+                        .htmx-request #loading {
+                            display: inline;
+                        }
+                        #loading:not(.htmx-request) {
+                            display: none;
+                        }
+                    </style>
+                    <span id="loading" class="loading loading-dots loading-xs"></span>
+                    add
+                </button>
+            </form>
+        </section>
+
+
+    </main>
 </body>
 </html>
